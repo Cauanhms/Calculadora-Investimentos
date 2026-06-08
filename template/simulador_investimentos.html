@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<!--
+  DOCTYPE html → Declara que usamos HTML5 (versão moderna).
+  Sem isso, o navegador entra em "quirks mode" e renderiza de forma estranha.
+-->
+
+<html lang="pt-br">
+<!--
+  <html> → Tag raiz. TUDO do HTML fica dentro dela.
+  lang="pt-br" → Informa o idioma ao navegador, leitores de tela e Google.
+-->
+
+<head>
+<!--
+  <head> → Seção de METADADOS. Não aparece na tela, mas é essencial.
+  Contém: título da aba, links de CSS, fontes, configurações de tela, etc.
+-->
+
+  <meta charset="UTF-8">
+  <!--
+    charset="UTF-8" → Define a codificação de caracteres.
+    Sem isso: ã, ç, é, ó aparecem como símbolos estranhos (???).
+    UTF-8 suporta todos os idiomas do mundo.
+  -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    viewport → Controla como a página aparece em celulares.
+    width=device-width → largura da página = largura da tela do aparelho
+    initial-scale=1.0 → sem zoom inicial
+    Sem isso: celular exibe a versão desktop (tudo minúsculo).
+  -->
+
+  <title>Bank2You — Simulador de Investimentos</title>
+  <!--
+    <title> → Texto que aparece na ABA do navegador.
+    Também é usado pelo Google nos resultados de busca (SEO).
+  -->
+
+  <!--
+    ══════════════════════════════════════════
+    CONEXÃO COM CSS EXTERNO ← PONTO IMPORTANTE
+    ══════════════════════════════════════════
+    
+    A tag <link> conecta o HTML ao arquivo CSS.
+    
+    ✦ rel="stylesheet" → diz que é uma folha de estilos
+    ✦ href → caminho para o arquivo CSS
+    
+    No Flask, NÃO usamos caminhos diretos como href="static/style.css".
+    Usamos a função Jinja2:
+        {{ url_for('static', filename='style.css') }}
+    
+    O que ela faz:
+    → Gera automaticamente o caminho correto: /static/style.css
+    → Se você mover o projeto, o caminho continua funcionando
+    → É a forma oficial e segura do Flask servir arquivos estáticos
+    
+    Jinja2 é o motor de templates do Flask. Ele processa
+    expressões {{ }} e {% %} antes de enviar o HTML ao navegador.
+  -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Importando fonte do Google Fonts (servidor externo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+<!--
+  <body> → Todo o conteúdo VISÍVEL da página fica aqui.
+  O navegador renderiza o que está no body.
+-->
+
+  <!-- ════════════════════════════════════
+       CABEÇALHO
+       <header> é um elemento SEMÂNTICO:
+       indica ao navegador (e ao Google) que
+       aqui está o cabeçalho da página.
+       ════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-inner">
+    <!--
+      <div> → "caixa" genérica, sem significado semântico.
+      Usada para agrupar e organizar elementos para o CSS.
+      class="header-inner" → atributo que conecta ao CSS.
+    -->
+
+      <div class="logo">
+        <div class="logo-badge">B2Y</div>
+        <div class="logo-text">
+          <h1>Bank2You</h1>
+          <!--
+            <h1> → Título mais importante da página.
+            Regra: apenas UM h1 por página (importante para SEO).
+            Hierarquia: h1 (maior) → h2 → h3 → h4 → h5 → h6 (menor)
+          -->
+          <span class="tagline">Simulador de Investimentos</span>
+          <!--
+            <span> → Elemento INLINE genérico (não quebra linha).
+            Diferente do <div> (bloco, quebra linha).
+            Usado para estilizar partes de um texto.
+          -->
+        </div>
+      </div>
+
+      <div class="header-pills">
+        <span class="pill">✦ Seguro</span>
+        <span class="pill">✦ Confiável</span>
+        <span class="pill">✦ Transparente</span>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════
+       CONTEÚDO PRINCIPAL
+       <main> → elemento semântico que indica
+       onde está o conteúdo central da página.
+       Deve existir apenas UM por página.
+       ════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- SEÇÃO HERO (apresentação da página) -->
+    <section class="hero">
+    <!--
+      <section> → agrupa conteúdo relacionado por tema.
+      Elemento semântico: diz ao navegador "este bloco
+      tem um assunto próprio".
+    -->
+      <div class="hero-label">Simulador Financeiro</div>
+      <h2 class="hero-title">
+        Descubra o poder dos <em>juros compostos</em>
+        <!--
+          <em> → ênfase semântica (itálico com SIGNIFICADO).
+          Diferente de <i> que é apenas visual/itálico.
+          Leitores de tela leem <em> com entonação diferente.
+        -->
+      </h2>
+      <p class="hero-sub">Selecione um investimento, insira o valor e veja seu patrimônio crescer ao longo do tempo.</p>
+    </section>
+
+    <!-- ════════════════════════════════════
+         SEÇÃO SIMULADOR
+         ════════════════════════════════════ -->
+    <section class="simulator-wrapper">
+
+      <div class="simulator-card">
+        <div class="card-label-tag">Configuração</div>
+        <h2 class="card-title">Monte sua simulação</h2>
+
+        <!--
+          Usamos <div> ao invés de <form> aqui porque
+          não vamos fazer submit tradicional.
+          O JavaScript captura os dados e envia via fetch() (Ajax).
+        -->
+        <div class="form-container">
+
+          <!-- ── CAMPO: VALOR ── -->
+          <div class="field-group">
+          <!--
+            Padrão de formulário: sempre agrupe <label> + <input>
+            em um <div>. Facilita o CSS e a organização.
+          -->
+            <label for="campo-valor" class="field-label">
+            <!--
+              <label> → Rótulo do campo.
+              for="campo-valor" → conecta ao <input id="campo-valor">.
+              Clicar no label FOCA no input correspondente.
+              Essencial para acessibilidade (usuários com deficiência motora).
+            -->
+              Valor a investir
+            </label>
+            <div class="input-row">
+              <span class="input-prefix">R$</span>
+              <input
+                type="number"
+                <!--
+                  type="number" → aceita apenas números.
+                  Exibe teclado numérico em celulares.
+                  
+                  Outros types comuns:
+                  text → texto livre
+                  email → valida formato de email
+                  password → oculta o texto digitado
+                  date → abre seletor de data
+                  checkbox → caixa de marcar
+                  radio → botão de opção (1 de N)
+                -->
+                id="campo-valor"
+                <!--
+                  id → identificador ÚNICO na página inteira.
+                  Usado em:
+                  1. JavaScript: document.getElementById('campo-valor')
+                  2. CSS: #campo-valor { ... }
+                  3. label: for="campo-valor"
+                -->
+                name="valor"
+                <!--
+                  name → nome do campo ao enviar um form.
+                  Importante para o backend identificar o dado.
+                -->
+                min="1"
+                step="0.01"
+                <!--
+                  min="1" → valor mínimo (HTML5 valida nativamente)
+                  step="0.01" → aceita centavos (0.01 de incremento)
+                -->
+                placeholder="Ex: 5.000,00"
+                <!--
+                  placeholder → texto de dica exibido quando vazio.
+                  Desaparece ao digitar.
+                -->
+                class="field-input"
+              >
+            </div>
+          </div>
+
+          <!-- ── CAMPO: PERÍODO ── -->
+          <div class="field-group">
+            <label for="campo-periodo" class="field-label">Período de investimento</label>
+            <div class="input-row">
+              <input
+                type="number"
+                id="campo-periodo"
+                name="periodo"
+                min="1"
+                max="50"
+                placeholder="Ex: 10"
+                class="field-input"
+              >
+              <span class="input-suffix">anos</span>
+            </div>
+          </div>
+
+          <!-- ── SELEÇÃO DO TIPO DE INVESTIMENTO ── -->
+          <div class="field-group">
+            <label class="field-label">Tipo de Investimento</label>
+            <p class="field-hint">Clique em um card para selecionar e ver os detalhes</p>
+
+            <div class="investments-grid">
+            <!--
+              Esta div usa CSS Grid para organizar os cards
+              em colunas automaticamente conforme o espaço disponível.
+            -->
+
+              <!--
+                CARD DE INVESTIMENTO
+                ══════════════════
+                Estrutura de cada card:
+                ├── <div class="inv-card"> ← container clicável
+                │ ├── <input type="radio"> ← botão de seleção (escondido via CSS)
+                │ └── <label> ← conteúdo visual do card
+                
+                Por que usar radio button + label?
+                → Acessibilidade nativa do HTML
+                → O for/id conecta o label ao input
+                → Clicar no label = selecionar o radio
+              -->
+
+              <!-- CARD: POUPANÇA -->
+              <div class="inv-card" id="card-poupanca" onclick="selecionarInvestimento('poupanca')">
+              <!--
+                onclick="..." → Evento JavaScript executado ao clicar.
+                Passamos o identificador 'poupanca' para a função saber
+                qual investimento foi escolhido.
+              -->
+                <input
+                  type="radio"
+                  <!--
+                    type="radio" → Permite selecionar APENAS UM entre vários.
+                    Quando varios radios têm o mesmo name, formam um GRUPO.
+                    Só 1 pode estar marcado por vez no mesmo grupo.
+                  -->
+                  id="radio-poupanca"
+                  name="tipo-investimento"
+                  <!--
+                    name="tipo-investimento" → define o grupo.
+                    Todos os radios com o mesmo name competem entre si.
+                  -->
+                  value="poupanca"
+                  <!--
+                    value → dado enviado quando este radio está marcado.
+                    O JavaScript usa para identificar a seleção.
+                  -->
+                  class="radio-hidden"
+                >
+                <label for="radio-poupanca" class="inv-card-label">
+                  <div class="inv-top">
+                    <span class="inv-icon">💰</span>
+                    <span class="inv-risk risk-low">Baixo Risco</span>
+                  </div>
+                  <div class="inv-name">Poupança</div>
+                  <div class="inv-rate">6,17%<small>/ano</small></div>
+                </label>
+              </div>
+
+              <!-- CARD: CDB -->
+              <div class="inv-card" id="card-cdb" onclick="selecionarInvestimento('cdb')">
+                <input type="radio" id="radio-cdb" name="tipo-investimento" value="cdb" class="radio-hidden">
+                <label for="radio-cdb" class="inv-card-label">
+                  <div class="inv-top">
+                    <span class="inv-icon">📈</span>
+                    <span class="inv-risk risk-low-med">Baixo-Médio</span>
+                  </div>
+                  <div class="inv-name">CDB</div>
+                  <div class="inv-rate">12,00%<small>/ano</small></div>
+                </label>
+              </div>
+
+              <!-- CARD: TESOURO DIRETO -->
+              <div class="inv-card" id="card-tesouro" onclick="selecionarInvestimento('tesouro')">
+                <input type="radio" id="radio-tesouro" name="tipo-investimento" value="tesouro" class="radio-hidden">
+                <label for="radio-tesouro" class="inv-card-label">
+                  <div class="inv-top">
+                    <span class="inv-icon">🏛️</span>
+                    <span class="inv-risk risk-low">Baixo Risco</span>
+                  </div>
+                  <div class="inv-name">Tesouro Direto</div>
+                  <div class="inv-rate">12,15%<small>/ano</small></div>
+                </label>
+              </div>
+
+              <!-- CARD: LCI/LCA -->
+              <div class="inv-card" id="card-lci" onclick="selecionarInvestimento('lci')">
+                <input type="radio" id="radio-lci" name="tipo-investimento" value="lci" class="radio-hidden">
+                <label for="radio-lci" class="inv-card-label">
+                  <div class="inv-top">
+                    <span class="inv-icon">🏠</span>
+                    <span class="inv-risk risk-low">Baixo Risco</span>
+                  </div>
+                  <div class="inv-name">LCI / LCA</div>
+                  <div class="inv-rate">10,80%<small>/ano</small></div>
+                </label>
+              </div>
+
+              <!-- CARD: FUNDO MULTIMERCADO -->
+              <div class="inv-card" id="card-fundo" onclick="selecionarInvestimento('fundo')">
+                <input type="radio" id="radio-fundo" name="tipo-investimento" value="fundo" class="radio-hidden">
+                <label for="radio-fundo" class="inv-card-label">
+                  <div class="inv-top">
+                    <span class="inv-icon">📊</span>
+                    <span class="inv-risk risk-high">Médio-Alto</span>
+                  </div>
+                  <div class="inv-name">Fundo Multimercado</div>
+                  <div class="inv-rate">14,00%<small>/ano</small></div>
+                </label>
+              </div>
+
+            </div><!-- /investments-grid -->
+          </div><!-- /field-group -->
+
+          <!--
+            BOTÃO DE AÇÃO
+            type="button" → NÃO envia o form (não recarrega a página).
+            type="submit" → enviaria o form e recarregaria (não queremos isso).
+            onclick="calcular()" → chama nossa função JavaScript.
+          -->
+          <button type="button" class="btn-calcular" id="btn-calcular" onclick="calcular()">
+            Calcular Simulação →
+          </button>
+
+        </div><!-- /form-container -->
+      </div><!-- /simulator-card -->
+
+    </section><!-- /simulator-wrapper -->
+
+
+    <!-- ════════════════════════════════════
+         SEÇÃO: DETALHES DO INVESTIMENTO
+         Fica invisível (hidden) e aparece
+         quando o usuário clica num card.
+         O JS remove a classe "hidden".
+         ════════════════════════════════════ -->
+    <section class="details-section hidden" id="details-section">
+      <div id="details-content">
+        <!-- Preenchido dinamicamente pelo JavaScript -->
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════
+         SEÇÃO: RESULTADO
+         Também começa oculta.
+         ════════════════════════════════════ -->
+    <section class="result-section hidden" id="result-section">
+      <div id="result-content">
+        <!-- Preenchido dinamicamente pelo JavaScript -->
+      </div>
+    </section>
+
+
+  </main>
+
+
+  <!-- ════════════════════════════════════
+       RODAPÉ
+       <footer> → elemento semântico.
+       Indica que aqui está o rodapé da página.
+       ════════════════════════════════════ -->
+  <footer class="footer">
+    <p>© 2026 <strong>Bank2You</strong> — Todos os direitos reservados.</p>
+    <!--
+      <strong> → negrito COM significado semântico (texto importante).
+      Diferente de <b> que é apenas visual, sem semântica.
+    -->
+    <p class="disclaimer">
+      ⚠️ <em>Simulação educativa. Rentabilidades são estimativas. Consulte um assessor financeiro.</em>
+    </p>
+  </footer>
+
+
+  <!--
+    ══════════════════════════════════════════════
+    POR QUE O <script> FICA NO FINAL DO <body>?
+    ══════════════════════════════════════════════
+    
+    O navegador lê o HTML de CIMA para BAIXO.
+    
+    Se o script estiver no <head>:
+      → Tenta acessar elementos que ainda não existem → ERRO
+    
+    Se o script estiver no FINAL do <body>:
+      → Todo o HTML já foi carregado → funciona perfeitamente ✓
+    
+    Alternativa moderna: <script defer src="script.js">
+      → Carrega em paralelo, executa após o HTML → também funciona
+  -->
+  <script>
+
+    // ══════════════════════════════════════
+    // BANCO DE DADOS (JavaScript Object)
+    // Objeto com todas as informações de cada tipo de investimento
+    // Chave do objeto (ex: 'poupanca') = value do radio button no HTML
+    // ══════════════════════════════════════
+
+    const INVESTIMENTOS = {
+
+      poupanca: {
+        nome: 'Poupança',
+        taxa: 6.17,
+        icone: '💰',
+        descricao: `A Poupança é o investimento mais tradicional do Brasil. 
+          Rende 70% da Taxa Selic quando ela supera 8,5% ao ano, 
+          ou 0,5% ao mês + TR em cenários contrários. 
+          É simples, segura e ideal para quem está começando ou 
+          precisa de reserva de emergência.`,
+        beneficios: [
+          'Liquidez imediata — saque a qualquer momento sem perdas',
+          'Isenta de Imposto de Renda para Pessoa Física',
+          'Garantida pelo FGC até R$ 250.000 por CPF/instituição',
+          'Sem taxa de administração ou custódia',
+          'Sem valor mínimo para começar',
+          'Ideal para reserva de emergência'
+        ],
+        maleficios: [
+          'Menor rentabilidade entre todos os investimentos listados',
+          'Rendimento só contabiliza na data de aniversário (mensal)',
+          'Saques antes da data de aniversário perdem os juros do mês',
+          'Pode ficar abaixo da inflação em alguns cenários',
+          'Rentabilidade limitada por lei — não acompanha toda alta da Selic'
+        ]
+      },
+
+      cdb: {
+        nome: 'CDB — Certificado de Depósito Bancário',
+        taxa: 12.00,
+        icone: '📈',
+        descricao: `O CDB é um título de renda fixa emitido por bancos. 
+          Ao investir, você empresta dinheiro ao banco e recebe juros. 
+          Pode ser prefixado (taxa definida no contrato), 
+          pós-fixado (ex: 110% do CDI) ou híbrido (IPCA + taxa). 
+          A taxa de 12% representa aproximadamente um CDB 100% CDI.`,
+        beneficios: [
+          'Rentabilidade superior à poupança',
+          'Garantido pelo FGC até R$ 250.000 por CPF/instituição',
+          'Opções de liquidez diária ou no vencimento',
+          'Grande variedade de prazos e taxas disponíveis',
+          'Opções prefixadas trazem previsibilidade total',
+          'Disponível em bancos e corretoras com facilidade'
+        ],
+        maleficios: [
+          'Incide Imposto de Renda (tabela regressiva: 22,5% até 15%)',
+          'IOF proporcional para resgates antes de 30 dias',
+          'Alguns CDBs têm carência — não permitem resgate antes do prazo',
+          'Risco de crédito do banco emissor (mitigado pelo FGC)',
+          'Taxas variam muito entre bancos — é necessário pesquisar'
+        ]
+      },
+
+      tesouro: {
+        nome: 'Tesouro Direto — Tesouro Selic',
+        taxa: 12.15,
+        icone: '🏛️',
+        descricao: `O Tesouro Direto é um programa do Tesouro Nacional para 
+          compra de títulos públicos federais pela internet. 
+          O Tesouro Selic rende 100% da taxa Selic e é considerado 
+          o investimento mais seguro do Brasil — garantido pelo governo federal. 
+          Existem também Tesouro Prefixado e Tesouro IPCA+.`,
+        beneficios: [
+          'O investimento mais seguro do Brasil (garantia do governo federal)',
+          'Acessível a partir de R$ 30,00 — democratizado',
+          'Plataforma online simples via Tesouro Direto ou corretoras',
+          'Liquidez diária garantida (você vende quando quiser)',
+          'Diversidade: Selic, IPCA+, Prefixado para cada objetivo',
+          'Transparência total nas informações'
+        ],
+        maleficios: [
+          'Incide Imposto de Renda (de 22,5% a 15% conforme o prazo)',
+          'Taxa de custódia da B3: 0,20% ao ano sobre o valor investido',
+          'Tesouro Prefixado e IPCA+ variam de preço antes do vencimento',
+          'Resgate antecipado desses títulos pode gerar perda',
+          'Algumas corretoras cobram taxa de administração adicional'
+        ]
+      },
+
+      lci: {
+        nome: 'LCI / LCA — Letras de Crédito',
+        taxa: 10.80,
+        icone: '🏠',
+        descricao: `LCI (Letra de Crédito Imobiliário) e LCA (Letra de Crédito 
+          do Agronegócio) são títulos emitidos por bancos, lastreados 
+          em carteiras de crédito imobiliário e agrícola. 
+          São isentos de IR para pessoa física, o que torna 
+          a rentabilidade líquida muito competitiva na comparação com o CDB.`,
+        beneficios: [
+          'ISENTO de Imposto de Renda para Pessoa Física — grande diferencial!',
+          'Garantido pelo FGC até R$ 250.000 por CPF/instituição',
+          'Rentabilidade líquida competitiva por causa da isenção de IR',
+          'Contribui para setores estratégicos: habitação e agronegócio',
+          'Regulamentado e fiscalizado pelo Banco Central',
+          'Disponível em modalidades prefixada e pós-fixada'
+        ],
+        maleficios: [
+          'Carência mínima de 90 dias — sem possibilidade de resgate antes',
+          'Liquidez restrita — muitos não permitem resgate antecipado',
+          'Valor mínimo de aplicação pode ser elevado em alguns bancos',
+          'Oferta irregular — nem sempre disponível nas corretoras',
+          'Prazo máximo pode não se adequar a todos os objetivos'
+        ]
+      },
+
+      fundo: {
+        nome: 'Fundo de Investimento Multimercado',
+        taxa: 14.00,
+        icone: '📊',
+        descricao: `Fundos Multimercado reúnem recursos de vários investidores 
+          (cotistas) para investir coletivamente em múltiplas classes de ativos: 
+          renda fixa, ações, câmbio, derivativos e outros. 
+          São gerenciados por especialistas e buscam maior rentabilidade 
+          com diversificação. A taxa de 14% é uma estimativa — varia conforme o fundo.`,
+        beneficios: [
+          'Gestão profissional por especialistas do mercado financeiro',
+          'Diversificação automática em múltiplas classes de ativos',
+          'Acesso a estratégias e mercados inacessíveis individualmente',
+          'Ampla variedade de perfis: conservador ao arrojado',
+          'Praticidade — você investe e o gestor cuida do restante',
+          'Regulamentado pela CVM (Comissão de Valores Mobiliários)'
+        ],
+        maleficios: [
+          'Taxa de administração anual reduz a rentabilidade bruta',
+          'Pode haver taxa de performance cobrada sobre o lucro excedente',
+          'Come-cotas: antecipação semestral de IR (maio e novembro)',
+          'Rendimento VARIÁVEL — pode ser menor ou até negativo',
+          'NÃO garantido pelo FGC — há risco de perda do capital investido',
+          'Gestão nem sempre supera o benchmark (CDI, Ibovespa)'
+        ]
+      }
+
+    }; // fim INVESTIMENTOS
+
+
+    // ══════════════════════════════════════
+    // VARIÁVEL DE ESTADO
+    // Controla qual investimento está selecionado agora.
+    // null = nenhum ainda.
+    // ══════════════════════════════════════
+    let tipoSelecionado = null;
+
+
+    // ══════════════════════════════════════
+    // FUNÇÃO: selecionarInvestimento(tipo)
+    // Chamada quando o usuário clica num card.
+    // Parâmetro: tipo (string) ex: 'poupanca'
+    // ══════════════════════════════════════
+    function selecionarInvestimento(tipo) {
+
+      tipoSelecionado = tipo; // Atualiza o estado
+
+      // Remove a classe 'ativo' de TODOS os cards
+      // querySelectorAll → retorna uma lista de todos os elementos com aquela classe
+      // forEach → itera (percorre) cada elemento da lista
+      document.querySelectorAll('.inv-card').forEach(function(card) {
+        card.classList.remove('ativo');
+        // classList.remove → remove uma classe CSS do elemento
+      });
+
+      // Adiciona 'ativo' apenas no card clicado
+      // getElementById → seleciona UM elemento pelo id único
+      document.getElementById('card-' + tipo).classList.add('ativo');
+      // classList.add → adiciona uma classe CSS
+
+      // Marca o radio button correspondente programaticamente
+      document.getElementById('radio-' + tipo).checked = true;
+      // .checked = true → equivale a clicar no radio button
+
+      // Exibe as informações do investimento
+      exibirDetalhes(tipo);
+    }
+
+
+    // ══════════════════════════════════════
+    // FUNÇÃO: exibirDetalhes(tipo)
+    // Monta e exibe o painel de informações.
+    // ══════════════════════════════════════
+    function exibirDetalhes(tipo) {
+
+      const inv = INVESTIMENTOS[tipo]; // Acessa os dados pelo nome da chave
+
+      // .map() → transforma cada item do array em uma string HTML
+      // .join('') → une todos os itens em uma única string
+      const beneficiosHTML = inv.beneficios
+        .map(item => `<li><span class="li-icon">✅</span>${item}</li>`)
+        .join('');
+
+      const maleficiosHTML = inv.maleficios
+        .map(item => `<li><span class="li-icon">⚠️</span>${item}</li>`)
+        .join('');
+
+      // Template literal (backtick `) → string multilinha com interpolação ${variavel}
+      const html = `
+        <div class="details-card">
+          <div class="details-header">
+            <div class="details-icon">${inv.icone}</div>
+            <div>
+              <div class="details-tag">Investimento Selecionado</div>
+              <h2 class="details-title">${inv.nome}</h2>
+            </div>
+            <div class="details-rate-badge">${inv.taxa}%<small>/ano</small></div>
+          </div>
+
+          <div class="details-desc">
+            <h3>Sobre este produto</h3>
+            <p>${inv.descricao}</p>
+          </div>
+
+          <div class="details-pros-cons">
+            <div class="pros-box">
+              <h3>✅ Benefícios</h3>
+              <ul>${beneficiosHTML}</ul>
+            </div>
+            <div class="cons-box">
+              <h3>⚠️ Pontos de Atenção</h3>
+              <ul>${maleficiosHTML}</ul>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // innerHTML → substitui o conteúdo HTML interno de um elemento
+      document.getElementById('details-content').innerHTML = html;
+
+      // Remove a classe 'hidden' para exibir a seção
+      document.getElementById('details-section').classList.remove('hidden');
+
+      // Rola suavemente até a seção de detalhes
+      // scrollIntoView → faz a página rolar até o elemento
+      document.getElementById('details-section').scrollIntoView({
+        behavior: 'smooth', // 'smooth' = animação suave | 'auto' = imediato
+        block: 'start' // alinha o elemento ao topo da janela
+      });
+    }
+
+
+    // ══════════════════════════════════════
+    // FUNÇÃO: calcular()
+    // Envia os dados ao Flask via fetch() (Ajax)
+    // e exibe o resultado retornado.
+    //
+    // async/await → forma moderna de lidar com
+    // operações assíncronas (que demoram, como
+    // requisições de rede). Evita o "callback hell".
+    // ══════════════════════════════════════
+    async function calcular() {
+
+      // ── Validações ──
+      if (!tipoSelecionado) {
+        alert('Selecione um tipo de investimento antes de calcular!');
+        return; // Interrompe a função
+      }
+
+      const valor = document.getElementById('campo-valor').value;
+      // .value → captura o texto/número digitado no input
+
+      const periodo = document.getElementById('campo-periodo').value;
+
+      if (!valor || parseFloat(valor) <= 0) {
+        alert('Informe um valor válido para investir!');
+        return;
+      }
+
+      if (!periodo || parseInt(periodo) <= 0) {
+        alert('Informe um período válido (em anos)!');
+        return;
+      }
+
+      // ── Feedback visual durante o cálculo ──
+      const btn = document.getElementById('btn-calcular');
+      const textoOriginal = btn.textContent;
+      btn.textContent = 'Calculando...';
+      btn.disabled = true;
+      // .disabled = true → desabilita o botão (evita cliques duplos)
+
+      try {
+      // try/catch → tenta executar o código; se der erro, vai para o catch
+
+        // ── FETCH: Requisição HTTP para o Flask ──
+        // fetch() → API nativa do JavaScript para fazer requisições HTTP
+        // É assíncrono: não trava a página enquanto espera a resposta
+        const resposta = await fetch('/calcular', {
+        // await → "espere a resposta antes de continuar"
+          method: 'POST',
+          // POST → envia dados no corpo da requisição
+          // GET → dados vão na URL (ex: /calcular?valor=1000)
+          // POST é mais seguro e adequado para envio de dados
+
+          headers: {
+            'Content-Type': 'application/json'
+            // Avisa ao servidor: "estou enviando JSON"
+          },
+
+          body: JSON.stringify({
+            // JSON.stringify() → converte objeto JS para texto JSON
+            // { valor: 1000, periodo: 5, tipo: 'cdb' }
+            // → '{"valor":1000,"periodo":5,"tipo":"cdb"}'
+            valor: parseFloat(valor), // parseFloat → string para decimal
+            periodo: parseInt(periodo), // parseInt → string para inteiro
+            tipo: tipoSelecionado
+          })
+        });
+
+        // Converte a resposta do servidor de JSON para objeto JavaScript
+        const dados = await resposta.json();
+        // resposta.json() → lê o corpo da resposta e interpreta como JSON
+
+        if (dados.erro) {
+          alert('Erro: ' + dados.erro);
+          return;
+        }
+
+        // Exibe o resultado
+        exibirResultado(dados);
+
+      } catch (erro) {
+      // catch(erro) → executado se algo der errado (ex: servidor offline)
+        console.error('Erro na requisição:', erro);
+        // console.error → imprime no console do navegador (F12 → Console)
+        alert('Erro ao conectar com o servidor. Certifique-se de que o Flask está rodando.');
+
+      } finally {
+      // finally → executado SEMPRE, independente de sucesso ou erro
+        btn.textContent = textoOriginal;
+        btn.disabled = false; // Reabilita o botão
+      }
+    }
+
+
+    // ══════════════════════════════════════
+    // FUNÇÃO: exibirResultado(dados)
+    // Monta e exibe o painel de resultados.
+    // dados → objeto JSON retornado pelo Flask
+    // ══════════════════════════════════════
+    function exibirResultado(dados) {
+
+      // O operador ternário: condição ? valor_se_verdadeiro : valor_se_falso
+      const anoLabel = dados.periodo == 1 ? 'ano' : 'anos';
+
+      const html = `
+        <div class="result-card">
+          <div class="result-header">
+            <div class="result-tag">Resultado da Simulação</div>
+            <h2 class="result-title">📊 ${dados.nome_investimento}</h2>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-item">
+              <span class="result-label">Valor Investido</span>
+              <span class="result-value">R$ ${dados.valor_inicial}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Período</span>
+              <span class="result-value">${dados.periodo} ${anoLabel}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Taxa Anual</span>
+              <span class="result-value">${dados.taxa}% a.a.</span>
+            </div>
+            <div class="result-item result-highlight">
+              <span class="result-label">Valor Final Estimado</span>
+              <span class="result-value big">R$ ${dados.valor_final}</span>
+            </div>
+            <div class="result-item result-profit">
+              <span class="result-label">Lucro Total</span>
+              <span class="result-value green">+ R$ ${dados.lucro}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Rendimento Total</span>
+              <span class="result-value">${dados.rendimento_percentual}%</span>
+            </div>
+          </div>
+
+          <p class="result-disclaimer">
+            ⚠️ Simulação baseada em juros compostos com taxa constante.
+            Valores reais variam com impostos, taxas e condições de mercado.
+          </p>
+        </div>
+      `;
+
+      document.getElementById('result-content').innerHTML = html;
+      document.getElementById('result-section').classList.remove('hidden');
+      document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+  </script>
+
+</body>
+</html>
