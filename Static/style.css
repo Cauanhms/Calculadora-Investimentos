@@ -1,88 +1,40 @@
-/* ══════════════════════════════════════════════════════
-  BANK2YOU — style.css
-  Arquivo: static/style.css
-  
-  COMO O FLASK SERVE ESTE ARQUIVO:
-  ─────────────────────────────────
-  A pasta "static/" é especial no Flask.
-  Tudo dentro dela é servido automaticamente pelo servidor
-  sem precisar criar rotas Python para isso.
-  
-  Acesso direto: http://localhost:5000/static/style.css
-  
-  No HTML, referenciamos via Jinja2:
-  {{ url_for('static', filename='style.css') }}
-  
-  Isso gera: /static/style.css
-  ══════════════════════════════════════════════════════
-*/
-
-
-/* ─────────────────────────────────────────────────────
-   VARIÁVEIS CSS (Custom Properties)
-   Definidas em :root → disponíveis em TODO o documento.
-   
-   Por que usar variáveis?
-   → Consistência: mesma cor em 50 lugares? Muda aqui.
-   → Manutenção: refatorar cores/tamanhos é trivial.
-   → Legibilidade: --cor-ouro é mais claro que #C8A84B.
-───────────────────────────────────────────────────── */
 :root {
-  /* Paleta */
-  --azul-noite: #0D1B2A; /* Fundo escuro principal */
-  --azul-profundo: #1B2A3E; /* Cards sobre o fundo */
-  --azul-medio: #1E3A5F; /* Bordas, divisores */
-  --azul-claro: #2D6A9F; /* Accent interativo */
-  --ouro: #C8A84B; /* Cor destaque premium */
-  --ouro-claro: #F0D48A; /* Ouro mais brilhante */
-  --verde: #2ECC71; /* Lucro, benefícios */
-  --amarelo: #F39C12; /* Alertas, atenção */
+  --azul-noite: #0D1B2A;
+  --azul-profundo: #1B2A3E;
+  --azul-medio: #1E3A5F;
+  --azul-claro: #2D6A9F;
+  --ouro: #C8A84B;
+  --ouro-claro: #F0D48A;
+  --verde: #2ECC71;
+  --amarelo: #F39C12;
   --branco: #FFFFFF;
-  --texto-claro: #E8EDF2; /* Texto principal */
-  --texto-medio: #8FA3BE; /* Texto secundário */
-  --texto-suave: #556880; /* Texto terciário */
-
-  /* Tipografia */
+  --texto-claro: #E8EDF2;
+  --texto-medio: #8FA3BE;
+  --texto-suave: #556880;
   --fonte-titulo: 'DM Serif Display', Georgia, serif;
   --fonte-corpo: 'DM Sans', system-ui, sans-serif;
-
-  /* Espaçamentos */
   --gap-xs: 4px;
   --gap-sm: 8px;
   --gap-md: 16px;
   --gap-lg: 24px;
   --gap-xl: 40px;
   --gap-2xl: 64px;
-
-  /* Bordas */
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-
-  /* Sombras */
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
-  --glow-ouro: 0 0 20px rgba(200, 168, 75, 0.3);
-
-  /* Transição padrão */
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.4);
+  --glow-ouro: 0 0 20px rgba(200,168,75,0.3);
   --ease: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-/* ─────────────────────────────────────────────────────
-   RESET
-   Navegadores têm estilos padrão diferentes entre si.
-   O reset garante que partimos do mesmo ponto.
-───────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--fonte-corpo);
@@ -92,10 +44,6 @@ body {
   min-height: 100vh;
 }
 
-
-/* ─────────────────────────────────────────────────────
-   TIPOGRAFIA GLOBAL
-───────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
   font-family: var(--fonte-titulo);
   font-weight: 400;
@@ -110,10 +58,6 @@ h3 { font-size: 1.15rem; }
 p { color: var(--texto-medio); }
 em { font-style: italic; color: var(--ouro-claro); }
 
-
-/* ─────────────────────────────────────────────────────
-   HEADER
-───────────────────────────────────────────────────── */
 .header {
   background: linear-gradient(180deg, var(--azul-profundo) 0%, transparent 100%);
   border-bottom: 1px solid var(--azul-medio);
@@ -121,6 +65,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   position: sticky;
   top: 0;
   z-index: 100;
+  -webkit-backdrop-filter: blur(10px); /* CORREÇÃO: Evita aviso de compatibilidade Safari */
   backdrop-filter: blur(10px);
 }
 
@@ -153,10 +98,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   letter-spacing: 1px;
 }
 
-.logo h1 {
-  font-size: 1.4rem;
-  color: var(--ouro-claro);
-}
+.logo h1 { font-size: 1.4rem; color: var(--ouro-claro); }
 
 .tagline {
   display: block;
@@ -167,14 +109,11 @@ em { font-style: italic; color: var(--ouro-claro); }
   font-weight: 500;
 }
 
-.header-pills {
-  display: flex;
-  gap: var(--gap-sm);
-}
+.header-pills { display: flex; gap: var(--gap-sm); }
 
 .pill {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 20px;
   padding: var(--gap-xs) var(--gap-md);
   font-size: 0.75rem;
@@ -182,10 +121,6 @@ em { font-style: italic; color: var(--ouro-claro); }
   white-space: nowrap;
 }
 
-
-/* ─────────────────────────────────────────────────────
-   LAYOUT PRINCIPAL
-───────────────────────────────────────────────────── */
 .main {
   max-width: 1100px;
   margin: 0 auto;
@@ -195,21 +130,16 @@ em { font-style: italic; color: var(--ouro-claro); }
   gap: var(--gap-2xl);
 }
 
-
-/* ─────────────────────────────────────────────────────
-   SEÇÃO HERO
-───────────────────────────────────────────────────── */
 .hero {
   text-align: center;
-  padding: var(--gap-xl) 0;
-  border-bottom: 1px solid var(--azul-medio);
   padding-bottom: var(--gap-2xl);
+  border-bottom: 1px solid var(--azul-medio);
 }
 
 .hero-label {
   display: inline-block;
-  background: rgba(200, 168, 75, 0.12);
-  border: 1px solid rgba(200, 168, 75, 0.3);
+  background: rgba(200,168,75,0.12);
+  border: 1px solid rgba(200,168,75,0.3);
   color: var(--ouro);
   font-size: 0.75rem;
   font-weight: 600;
@@ -220,26 +150,9 @@ em { font-style: italic; color: var(--ouro-claro); }
   margin-bottom: var(--gap-lg);
 }
 
-.hero-title {
-  font-size: 2.8rem;
-  color: var(--branco);
-  margin-bottom: var(--gap-md);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
+.hero-title { font-size: 2.8rem; color: var(--branco); margin-bottom: var(--gap-md); }
+.hero-sub { font-size: 1.05rem; color: var(--texto-medio); max-width: 500px; margin: 0 auto; }
 
-.hero-sub {
-  font-size: 1.05rem;
-  color: var(--texto-medio);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-
-/* ─────────────────────────────────────────────────────
-   CARD BASE (componente reutilizável)
-───────────────────────────────────────────────────── */
 .simulator-card,
 .details-card,
 .result-card {
@@ -250,10 +163,6 @@ em { font-style: italic; color: var(--ouro-claro); }
   box-shadow: var(--shadow-card);
 }
 
-
-/* ─────────────────────────────────────────────────────
-   FORMULÁRIO
-───────────────────────────────────────────────────── */
 .card-label-tag {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -263,10 +172,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   margin-bottom: var(--gap-sm);
 }
 
-.card-title {
-  margin-bottom: var(--gap-xl);
-  color: var(--branco);
-}
+.card-title { margin-bottom: var(--gap-xl); color: var(--branco); }
 
 .form-container {
   display: flex;
@@ -287,11 +193,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   letter-spacing: 0.5px;
 }
 
-.field-hint {
-  font-size: 0.8rem;
-  color: var(--texto-suave);
-  font-style: italic;
-}
+.field-hint { font-size: 0.8rem; color: var(--texto-suave); font-style: italic; }
 
 .input-row {
   display: flex;
@@ -319,10 +221,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   white-space: nowrap;
 }
 
-.input-suffix {
-  border-right: none;
-  border-left: 1px solid var(--azul-medio);
-}
+.input-suffix { border-right: none; border-left: 1px solid var(--azul-medio); }
 
 .field-input {
   flex: 1;
@@ -335,20 +234,20 @@ em { font-style: italic; color: var(--ouro-claro); }
   color: var(--branco);
 }
 
-.field-input::placeholder {
-  color: var(--texto-suave);
-  font-style: italic;
-}
+.field-input::placeholder { color: var(--texto-suave); font-style: italic; }
 
+/* CORREÇÃO AQUI: Adicionado 'appearance' padrão para eliminar os alertas do VS Code */
 .field-input::-webkit-inner-spin-button,
 .field-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
   appearance: none;
+  margin: 0;
+}
+.field-input[type=number] { 
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
-
-/* ─────────────────────────────────────────────────────
-   GRID DE INVESTIMENTOS (CSS Grid)
-───────────────────────────────────────────────────── */
 .investments-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -356,10 +255,6 @@ em { font-style: italic; color: var(--ouro-claro); }
   margin-top: var(--gap-md);
 }
 
-
-/* ─────────────────────────────────────────────────────
-   CARDS DE INVESTIMENTO
-───────────────────────────────────────────────────── */
 .radio-hidden {
   position: absolute;
   opacity: 0;
@@ -390,10 +285,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   margin-bottom: var(--gap-md);
 }
 
-.inv-icon {
-  font-size: 2rem;
-  line-height: 1;
-}
+.inv-icon { font-size: 2rem; line-height: 1; }
 
 .inv-risk {
   font-size: 0.65rem;
@@ -404,9 +296,9 @@ em { font-style: italic; color: var(--ouro-claro); }
   border-radius: 20px;
 }
 
-.risk-low { background: rgba(46, 204, 113, 0.15); color: var(--verde); }
-.risk-low-med { background: rgba(243, 156, 18, 0.15); color: var(--amarelo); }
-.risk-high { background: rgba(231, 76, 60, 0.15); color: #E74C3C; }
+.risk-low { background: rgba(46,204,113,0.15); color: var(--verde); }
+.risk-low-med { background: rgba(243,156,18,0.15); color: var(--amarelo); }
+.risk-high { background: rgba(231,76,60,0.15); color: #E74C3C; }
 
 .inv-name {
   font-size: 0.9rem;
@@ -431,35 +323,26 @@ em { font-style: italic; color: var(--ouro-claro); }
 }
 
 .inv-card:hover {
-  border-color: rgba(200, 168, 75, 0.4);
+  border-color: rgba(200,168,75,0.4);
   transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
 }
 
 .inv-card.ativo {
   border-color: var(--ouro);
-  background: linear-gradient(135deg,
-    rgba(200, 168, 75, 0.08) 0%,
-    rgba(200, 168, 75, 0.03) 100%
-  );
+  background: linear-gradient(135deg, rgba(200,168,75,0.08) 0%, rgba(200,168,75,0.03) 100%);
   box-shadow: var(--glow-ouro);
 }
 
 .inv-card.ativo::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--ouro), var(--ouro-claro));
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
-
-/* ─────────────────────────────────────────────────────
-   BOTÃO CALCULAR
-───────────────────────────────────────────────────── */
 .btn-calcular {
   display: block;
   width: 100%;
@@ -481,32 +364,14 @@ em { font-style: italic; color: var(--ouro-claro); }
 .btn-calcular:hover {
   background-position: right center;
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(200, 168, 75, 0.4);
+  box-shadow: 0 8px 30px rgba(200,168,75,0.4);
 }
 
-.btn-calcular:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
+.btn-calcular:active { transform: translateY(0); box-shadow: none; }
+.btn-calcular:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-.btn-calcular:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
+.hidden { display: none !important; }
 
-
-/* ─────────────────────────────────────────────────────
-   CLASSE UTILITÁRIA: HIDDEN
-───────────────────────────────────────────────────── */
-.hidden {
-  display: none !important;
-}
-
-
-/* ─────────────────────────────────────────────────────
-   SEÇÃO DE DETALHES
-───────────────────────────────────────────────────── */
 .details-header {
   display: flex;
   align-items: center;
@@ -516,10 +381,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   border-bottom: 1px solid var(--azul-medio);
 }
 
-.details-icon {
-  font-size: 3rem;
-  flex-shrink: 0;
-}
+.details-icon { font-size: 3rem; flex-shrink: 0; }
 
 .details-tag {
   font-size: 0.7rem;
@@ -529,10 +391,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   margin-bottom: var(--gap-xs);
 }
 
-.details-title {
-  font-size: 1.4rem;
-  color: var(--branco);
-}
+.details-title { font-size: 1.4rem; color: var(--branco); }
 
 .details-rate-badge {
   margin-left: auto;
@@ -567,10 +426,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   letter-spacing: 1px;
 }
 
-.details-desc p {
-  color: var(--texto-medio);
-  line-height: 1.7;
-}
+.details-desc p { color: var(--texto-medio); line-height: 1.7; }
 
 .details-pros-cons {
   display: grid;
@@ -583,15 +439,8 @@ em { font-style: italic; color: var(--ouro-claro); }
   padding: var(--gap-lg);
 }
 
-.pros-box {
-  background: rgba(46, 204, 113, 0.06);
-  border: 1px solid rgba(46, 204, 113, 0.2);
-}
-
-.cons-box {
-  background: rgba(243, 156, 18, 0.06);
-  border: 1px solid rgba(243, 156, 18, 0.2);
-}
+.pros-box { background: rgba(46,204,113,0.06); border: 1px solid rgba(46,204,113,0.2); }
+.cons-box { background: rgba(243,156,18,0.06); border: 1px solid rgba(243,156,18,0.2); }
 
 .pros-box h3 { color: var(--verde); }
 .cons-box h3 { color: var(--amarelo); }
@@ -618,15 +467,8 @@ em { font-style: italic; color: var(--ouro-claro); }
   gap: var(--gap-sm);
 }
 
-.li-icon {
-  flex-shrink: 0;
-  font-size: 0.85rem;
-}
+.li-icon { flex-shrink: 0; }
 
-
-/* ─────────────────────────────────────────────────────
-   SEÇÃO DE RESULTADO
-───────────────────────────────────────────────────── */
 .result-header {
   margin-bottom: var(--gap-xl);
   padding-bottom: var(--gap-lg);
@@ -651,7 +493,7 @@ em { font-style: italic; color: var(--ouro-claro); }
 }
 
 .result-item {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,0.04);
   border: 1px solid var(--azul-medio);
   border-radius: var(--radius-sm);
   padding: var(--gap-lg);
@@ -668,8 +510,8 @@ em { font-style: italic; color: var(--ouro-claro); }
 
 .result-profit {
   grid-column: span 2;
-  background: rgba(46, 204, 113, 0.08);
-  border-color: rgba(46, 204, 113, 0.3);
+  background: rgba(46,204,113,0.08);
+  border-color: rgba(46,204,113,0.3);
 }
 
 .result-label {
@@ -680,13 +522,7 @@ em { font-style: italic; color: var(--ouro-claro); }
   font-weight: 600;
 }
 
-.result-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--texto-claro);
-  font-family: var(--fonte-titulo);
-}
-
+.result-value { font-size: 1.1rem; font-weight: 700; color: var(--texto-claro); font-family: var(--fonte-titulo); }
 .result-value.big { font-size: 2.2rem; color: var(--branco); }
 .result-value.green { color: var(--verde); }
 
@@ -699,10 +535,6 @@ em { font-style: italic; color: var(--ouro-claro); }
   padding-top: var(--gap-lg);
 }
 
-
-/* ─────────────────────────────────────────────────────
-   FOOTER
-───────────────────────────────────────────────────── */
 .footer {
   background: var(--azul-profundo);
   border-top: 1px solid var(--azul-medio);
@@ -715,85 +547,24 @@ em { font-style: italic; color: var(--ouro-claro); }
 .footer strong { color: var(--ouro); }
 .disclaimer { margin-top: var(--gap-sm); font-style: italic; font-size: 0.75rem; }
 
-
-/* ─────────────────────────────────────────────────────
-   RESPONSIVIDADE — Media Queries
-   
-   O que são Media Queries?
-   ──────────────────────────
-   Regras CSS que se aplicam APENAS em determinadas condições.
-   Mais comum: tamanho da tela (largura).
-   
-   Sintaxe:
-   @media (condicao) { [estilos que se aplicam quando verdadeiro] }
-   
-   Breakpoints mais usados:
-   < 480px → celular pequeno
-   < 768px → tablet / celular grande
-   < 1024px → tablet grande / laptop pequeno
-   > 1200px → desktop grande
-   
-   Mobile-first vs Desktop-first:
-   → Mobile-first: começa pelo celular, usa min-width para desktop
-   → Desktop-first: começa pelo desktop, usa max-width para celular
-   Este projeto usa Desktop-first.
-───────────────────────────────────────────────────── */
-
 @media (max-width: 768px) {
   .header-pills { display: none; }
   .hero-title { font-size: 2rem; }
-
-  .simulator-card,
-  .details-card,
-  .result-card { padding: var(--gap-lg); }
-
-  .investments-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .details-pros-cons {
-    grid-template-columns: 1fr;
-  }
-
-  .result-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .result-highlight {
-    grid-column: 1 / -1;
-  }
-
-  .result-profit {
-    grid-column: 1 / -1;
-  }
-
-  .details-header {
-    flex-wrap: wrap;
-  }
-
-  .details-rate-badge {
-    margin-left: 0;
-    width: 100%;
-    text-align: left;
-  }
+  .simulator-card, .details-card, .result-card { padding: var(--gap-lg); }
+  .investments-grid { grid-template-columns: repeat(2, 1fr); }
+  .details-pros-cons { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+  .result-highlight { grid-column: 1 / -1; }
+  .result-profit { grid-column: 1 / -1; }
+  .details-header { flex-wrap: wrap; }
+  .details-rate-badge { margin-left: 0; width: 100%; text-align: left; }
 }
 
 @media (max-width: 480px) {
   .main { padding: var(--gap-xl) var(--gap-md); }
-
   .hero-title { font-size: 1.6rem; }
-  .hero-sub { font-size: 0.9rem; }
-
-  .investments-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .result-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .investments-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; }
   .result-highlight,
-  .result-profit {
-    grid-column: auto;
-  }
+  .result-profit { grid-column: auto; }
 }
